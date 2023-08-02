@@ -1,4 +1,4 @@
-from main import get_trim_timestamps, seconds_to_timestamp, timestamp_to_seconds
+from trim import get_trim_timestamps, seconds_to_timestamp, timestamp_to_seconds
 
 
 def test_timestamp_to_seconds():
