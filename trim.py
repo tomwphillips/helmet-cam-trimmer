@@ -21,8 +21,8 @@ def timestamp_to_seconds(timestamp: str) -> int:
     if timestamp.startswith("-"):
         timestamp = timestamp[1:]
         sign = -1
-    hours, minutes, seconds = timestamp.split(":")
-    return sign * (int(hours) * 60 * 60 + int(minutes) * 60 + int(seconds))
+    parts = timestamp.split(":")[::-1]
+    return sign * sum(int(part) * 60**i for i, part in enumerate(parts))
 
 
 def seconds_to_timestamp(seconds: int) -> str:
