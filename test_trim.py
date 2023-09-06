@@ -21,3 +21,5 @@ def test_seconds_to_timestamp():
 def test_get_trim_timestamps():
     assert get_trim_timestamps(180) == (120, 240)
     assert get_trim_timestamps(30) == (0, 90)
+    assert get_trim_timestamps(180, padding_after=30) == (120, 210)
+    assert get_trim_timestamps(180, padding_before=30) == (150, 240)

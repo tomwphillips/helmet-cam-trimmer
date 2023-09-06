@@ -37,9 +37,11 @@ def seconds_to_timestamp(seconds: int) -> str:
     return f"{sign}{hours:02}:{minutes:02}:{seconds:02}"
 
 
-def get_trim_timestamps(*timestamps: int, padding: int = 60) -> Tuple[int, int]:
-    start = max(timestamps[0] - padding, 0)
-    end = timestamps[-1] + padding
+def get_trim_timestamps(
+    *timestamps: int, padding_before: int = 60, padding_after: int = 60
+) -> Tuple[int, int]:
+    start = max(timestamps[0] - padding_before, 0)
+    end = timestamps[-1] + padding_after
     return start, end
 
 
@@ -48,9 +50,15 @@ def get_trim_timestamps(*timestamps: int, padding: int = 60) -> Tuple[int, int]:
 @click.argument("timestamps", nargs=-1)
 @click.argument("output_file")
 @click.option(
-    "--padding",
+    "--padding-before",
     default=60,
-    help="Padding around timestamps in seconds",
+    help="Padding before first timestamp in seconds",
+    show_default=True,
+)
+@click.option(
+    "--padding-after",
+    default=60,
+    help="Padding after last timestamp in seconds",
     show_default=True,
 )
 @click.option(
@@ -61,11 +69,16 @@ def get_trim_timestamps(*timestamps: int, padding: int = 60) -> Tuple[int, int]:
     show_default=True,
 )
 def main(
-    input_file: str, output_file: str, timestamps: List[str], padding: int, preset: str
+    input_file: str,
+    output_file: str,
+    timestamps: List[str],
+    padding_before: int,
+    padding_after: int,
+    preset: str,
 ) -> None:
     timestamps_seconds = [timestamp_to_seconds(timestamp) for timestamp in timestamps]
     start_timestamp, end_timestamp = get_trim_timestamps(
-        *timestamps_seconds, padding=padding
+        *timestamps_seconds, padding_before=padding_before, padding_after=padding_after
     )
     (
         ffmpeg.input(input_file, ss=start_timestamp, to=end_timestamp)
